@@ -22,7 +22,7 @@
         console.log('ID:', id);
         console.log('Callback URL:', callbackUrl);
 
-            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=true`, {
+            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=false`, {
                 method: 'DELETE'
             })
             .then(response => response.json())
