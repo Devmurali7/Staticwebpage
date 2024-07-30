@@ -4,45 +4,55 @@
     <meta charset="UTF-8">
     <title>Delete Confirmation</title>
     <script>
-        // Function to handle redirection on page unload
-        function handleUnload() {
-            // This function can be removed if no longer needed
-        }
-
-        // Function to handle confirm and cancel button actions
+        // Function to handle confirm button action
         function handleConfirm() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('_id');
+            const callbackUrl = urlParams.get('callbackUrl');
 
-            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=false`, {
+            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=true`, {
                 method: 'DELETE'
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Deletion successful.');
-                    // Redirect or update UI as needed
+                    if (callbackUrl) {
+                        window.location.href = `${callbackUrl}?success=true`;
+                    } else {
+                        alert('Deletion successful.');
+                    }
                 } else {
-                    alert('Deletion failed.');
-                    // Redirect or update UI as needed
+                    if (callbackUrl) {
+                        window.location.href = `${callbackUrl}?success=false`;
+                    } else {
+                        alert('Deletion failed.');
+                    }
                 }
             })
             .catch(error => {
-                alert('An error occurred.');
-                // Redirect or update UI as needed
+                if (callbackUrl) {
+                    window.location.href = `${callbackUrl}?success=false`;
+                } else {
+                    alert('An error occurred.');
+                }
             });
         }
 
         function handleCancel() {
-            alert('Deletion canceled.');
-            // Redirect or update UI as needed
+            const urlParams = new URLSearchParams(window.location.search);
+            const callbackUrl = urlParams.get('callbackUrl');
+            if (callbackUrl) {
+                window.location.href = `${callbackUrl}?success=false`;
+            } else {
+                alert('Deletion canceled.');
+            }
         }
 
         // Set a timeout for handling user inactivity
         function setupTimeout() {
             const timeout = 60000; // 1 minute
             setTimeout(() => {
-                handleUnload();
+                handleCancel(); // Call handleCancel if timeout is reached
             }, timeout);
         }
 
@@ -52,9 +62,6 @@
             document.getElementById('confirmBtn').onclick = handleConfirm;
             document.getElementById('cancelBtn').onclick = handleCancel;
         };
-
-        // Handle page unload
-        window.onbeforeunload = handleUnload;
     </script>
 </head>
 <body>
