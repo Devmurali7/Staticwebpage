@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Confirmation</title>
+    <script>
+        // Function to handle redirection on page unload
+        function handleUnload() {
+            // This function can be removed if no longer needed
+        }
+
+        // Function to handle confirm and cancel button actions
+        function handleConfirm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('_id');
+
+            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=false`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Deletion successful.');
+                    // Redirect or update UI as needed
+                } else {
+                    alert('Deletion failed.');
+                    // Redirect or update UI as needed
+                }
+            })
+            .catch(error => {
+                alert('An error occurred.');
+                // Redirect or update UI as needed
+            });
+        }
+
+        function handleCancel() {
+            alert('Deletion canceled.');
+            // Redirect or update UI as needed
+        }
+
+        // Set a timeout for handling user inactivity
+        function setupTimeout() {
+            const timeout = 60000; // 1 minute
+            setTimeout(() => {
+                handleUnload();
+            }, timeout);
+        }
+
+        // Set up event listeners and start timeout
+        window.onload = function() {
+            setupTimeout();
+            document.getElementById('confirmBtn').onclick = handleConfirm;
+            document.getElementById('cancelBtn').onclick = handleCancel;
+        };
+
+        // Handle page unload
+        window.onbeforeunload = handleUnload;
+    </script>
+</head>
+<body>
+    <h1>Are you sure you want to delete?</h1>
+    <button id="confirmBtn">Confirm</button>
+    <button id="cancelBtn">Cancel</button>
+</body>
+</html>
