@@ -14,6 +14,10 @@
         const id = urlParams.get('_id');
         const callbackUrl = urlParams.get('callbackUrl');
 
+        // Log parameters for debugging
+        console.log('ID:', id);
+        console.log('Callback URL:', callbackUrl);
+
         document.getElementById('confirmBtn').onclick = function() {
             fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=false`)
                 .then(response => response.json())
