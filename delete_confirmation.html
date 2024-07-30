@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Confirmation</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete?</h1>
+    <button id="confirmBtn">Confirm</button>
+    <button id="cancelBtn">Cancel</button>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('_id');
+        const callbackUrl = urlParams.get('callbackUrl');
+
+        document.getElementById('confirmBtn').onclick = function() {
+            fetch(`https://api.revgensys.com/userGL/delete?_id=${id}&deleteMode=false`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `${callbackUrl}?success=true`;
+                    } else {
+                        window.location.href = `${callbackUrl}?success=false`;
+                    }
+                })
+                .catch(error => {
+                    window.location.href = `${callbackUrl}?success=false`;
+                });
+        };
+
+        document.getElementById('cancelBtn').onclick = function() {
+            window.location.href = `${callbackUrl}?success=false`;
+        };
+    </script>
+</body>
+</html>
